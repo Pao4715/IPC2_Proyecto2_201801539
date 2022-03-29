@@ -19,5 +19,15 @@ class ListaDoble:
     def recorrer(self):
         actual = self.primero
         while actual:
-            print(actual.node)
+            print(actual.Node)
+            actual = actual.siguiente
+
+    
+    def buscar(self, ciudad):
+        if self.primero is None:
+            return
+        actual = self.primero
+        while actual:
+            if actual.Node.nombre == ciudad:
+                return actual.Node
             actual = actual.siguiente
