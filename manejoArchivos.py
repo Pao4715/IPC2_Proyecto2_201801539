@@ -9,7 +9,6 @@ from robot import Robot
 
 import os
 
-
 listaD = ListaDoble()
 listaR = ListaDoble()
 city = ''
@@ -29,7 +28,7 @@ def extraerDatos():
     raiz = xmldoc.getroot()
 
     for ciudad in raiz.iter('ciudad'):
-        
+
         for n in ciudad.iter('nombre'):
             noFilas = n.get('filas')
             columnas = n.get('columnas')
@@ -59,13 +58,13 @@ def extraerDatos():
 
                 rect['unidadMilitar'] = u.text
                 capacidad = rect['unidadMilitar']
-                
+
                 #print('fila numero =  ' + fila + '  columna numero: ' + columna + '  Unidad:  ' + capacidad)
                 nuevaUnidad = UnidadM(fila, columna, capacidad)
                 nuevaCiudad.unidadesM.insertarNodo(nuevaUnidad)
 
             listaD.insertarNodo(nuevaCiudad)
-        
+
 
     for robot in raiz.iter('robot'):
 
@@ -78,8 +77,9 @@ def extraerDatos():
 
             nuevoRobot = Robot(nombreR, tipo, capacidadR)
             listaR.insertarNodo(nuevoRobot)
-         
-    listaD.recorrer() 
+    print('--------------------Ciudades--------------------------')
+    listaD.recorrer()
+    print('---------------------Robots---------------------------')
     listaR.recorrer()
 
 def mostrarBuscar():
@@ -87,13 +87,13 @@ def mostrarBuscar():
     print("Ingrese nombre de Ciudad: ")
     c = str(input('>'))
     city = listaD.buscar(c)
-    print(city)
+    print('Ciudad escogida: ' +  city.nombre)
 
 
 def graficar():
     global city
     auxiliar = city.filas.primero
-    #aux = auxiliar.primero
+    auxiliar2 = city.unidadesM.primero
     cadena = ''
     file = open('Grafica.dot', 'w')
     cadena = cadena + 'digraph G { bgcolor="pink"\n'
@@ -102,31 +102,43 @@ def graficar():
     cadena = cadena + 'edge [fontname="Helvetica,Arial,sans-serif"] \n'
     cadena = cadena + 'a0 [shape = "none", label=< \n'
     cadena = cadena + '<TABLE border="2" cellspacing="2" cellpadding="10" bgcolor="mediumpurple1"> \n'
-    
 
-    while auxiliar is not None:
+
+    for i in range(int(city.noFilas)):
 
         cadena = cadena + '<TR> \n'
 
-        for x in auxiliar.Node.secuencia:
-            if x == '*':
-                cadena = cadena + '<TD border="1"  bgcolor="black"  gradientangle="270">'+ '</TD>\n'
-            elif x == ' ':
-                cadena = cadena + '<TD border="1"  bgcolor="white"  gradientangle="270">'+ '</TD>\n'
-            elif x == 'E':
-                cadena = cadena + '<TD border="1"  bgcolor="green"  gradientangle="270">'+ '</TD>\n'
-            elif x == 'C':
-                cadena = cadena + '<TD border="1"  bgcolor="blue"  gradientangle="270">'+ '</TD>\n'
-            elif x == 'R':
-                cadena = cadena + '<TD border="1"  bgcolor="gray"  gradientangle="270">'+ '</TD>\n'
-        cadena = cadena + '</TR>\n'
+        for j in range(int(city.columnas)+1):
 
+            if auxiliar is not None:
+
+                if auxiliar2 is not None and int(auxiliar2.Node.fila)-1 == i and int(auxiliar2.Node.columna) == j:
+
+                    cadena = cadena + '<TD border="1"  bgcolor="red"  gradientangle="270">'+ '</TD>\n'
+                    auxiliar2 = auxiliar2.siguiente
+
+                else:
+
+                    if auxiliar.Node.secuencia[j] == '*':
+                        cadena = cadena + '<TD border="1"  bgcolor="black"  gradientangle="270">'+ '</TD>\n'
+                    elif auxiliar.Node.secuencia[j] == ' ':
+                        cadena = cadena + '<TD border="1"  bgcolor="white"  gradientangle="270">'+ '</TD>\n'
+                    elif auxiliar.Node.secuencia[j] == 'E':
+                        cadena = cadena + '<TD border="1"  bgcolor="green"  gradientangle="270">'+ '</TD>\n'
+                    elif auxiliar.Node.secuencia[j] == 'C':
+                        cadena = cadena + '<TD border="1"  bgcolor="blue"  gradientangle="270">'+ '</TD>\n'
+                    elif auxiliar.Node.secuencia[j] == 'R':
+                        cadena = cadena + '<TD border="1"  bgcolor="gray"  gradientangle="270">'+ '</TD>\n'
+
+        cadena = cadena + '</TR>\n'
         auxiliar = auxiliar.siguiente
-        
+
 
     cadena = cadena + '</TABLE>>];\n'
     cadena = cadena + '}\n'
     file.write(cadena)
     file.close()
     os.system('dot -Tpng Grafica.dot -o Grafica.png')
-    os.startfile(os.path.normpath('Grafica.png')) 
+    os.startfile(os.path.normpath('Grafica.png'))
+
+
