@@ -1,4 +1,4 @@
-from manejoArchivos import extraerDatos, graficar, mostrarBuscar
+from manejoArchivos import extraerDatos, graficar, mision, mostrarBuscar
 
 class Menu:
 
@@ -9,7 +9,7 @@ class Menu:
         print("1. Cargar Archivo                  ")
         print("2. Escoger Ciudad                  ")
         print("3. Mostrar Ciudad                  ")
-        print("4. Iniciar Misiones                ")
+        print("4. Escoger Misión                  ")
         print("5. Reporte de Misión               ")
         print("6. Salir                           ")
         print("=================================")
@@ -26,7 +26,7 @@ class Menu:
         elif opcion == "3":
             graficar()
         elif opcion == "4":
-            pass
+            mision()
         elif opcion == "5":
             pass
         elif opcion == "6":

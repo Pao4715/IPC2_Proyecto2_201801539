@@ -12,6 +12,8 @@ import os
 listaD = ListaDoble()
 listaR = ListaDoble()
 city = ''
+entradas = []
+unidades = []
 
 def extraerDatos():
 
@@ -81,13 +83,111 @@ def extraerDatos():
     listaD.recorrer()
     print('---------------------Robots---------------------------')
     listaR.recorrer()
+    print('-----------------------------------------------------')
+
 
 def mostrarBuscar():
     global city
     print("Ingrese nombre de Ciudad: ")
     c = str(input('>'))
     city = listaD.buscar(c)
+    print('-----------------------------------------------------')
     print('Ciudad escogida: ' +  city.nombre)
+    print('-----------------------------------------------------')
+    encontrarEntradas()
+    encontrarUCs()
+
+
+def encontrarEntradas():
+    global city 
+    auxiliar = city.filas.primero
+    while auxiliar != None:
+        contador = 0
+        for x in auxiliar.Node.secuencia:
+            if x == 'E':
+                entradas.append({'fila':  auxiliar.Node.numero , 'columna': contador})
+            contador += 1
+        auxiliar = auxiliar.siguiente
+
+
+def encontrarUCs():
+    global city 
+    auxiliar = city.filas.primero
+    while auxiliar != None:
+        contador = 0
+        for x in auxiliar.Node.secuencia:
+            if x == 'C':
+                unidades.append({'fila':  auxiliar.Node.numero , 'columna': contador})
+            contador += 1
+        auxiliar = auxiliar.siguiente
+
+
+def buscarCamino():
+    global entradas
+    global unidades
+    global city 
+    auxiliar = city.filas.primero
+
+    print('Entradas Disponibles: ' + str(entradas))
+    print('Unidades Civiles Disponibles: ' + str(unidades))
+
+
+def verificarRescue():
+    estado = False
+    while estado == False:
+        print('------------------------------------------')
+        print('Ingrese nombre de Robot a Utilizar: ')
+        r = str(input('>'))
+        robot = listaR.buscar(r)
+
+        if robot:
+
+            if robot.tipo == 'ChapinRescue':
+                print('-------------------------------------------------------------')
+                print('Robot escogido: ' + robot.nombre + ', ' + '  Capacidad: ' + str(robot.capacidad))
+                print('-------------------------------------------------------------')
+                estado = True
+                return robot
+            else:
+                print('Robot no compatible para la misión')
+                estado = False
+        else:
+            print('Robot no encontrado')
+            estado = False
+
+
+def encontrarUC():
+    global unidades
+
+    print('Ingrese Fila y columna de la Unidad Civil a Rescatar: ')
+    fila = int(input('Fila: '))
+    columna = int(input('Columna: '))
+
+    for x in unidades:
+
+        if int(x['fila']) == fila and int(x['columna']) == columna:
+
+            print('-------------------------------------------------------------')
+            print('Unidad Civil encontrada en ' + '\n Fila: ' + str(fila) + '\n Columna: ' + str(columna))
+            print('-------------------------------------------------------------')
+            return x
+
+        else:
+            print('Unidad Civil no encontrada')
+
+
+
+def mision():
+    global unidades
+    print('------------Misión a Realizar-------------')
+    print('1.- Mision de Rescate ') 
+    print('2.- Mision de Extraccion de Recursos ') 
+    print('------------------------------------------')
+    mision = str(input('>'))
+
+    if mision == '1':
+        verificarRescue()
+        encontrarUC()
 
 
 def graficar():
